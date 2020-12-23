@@ -53,8 +53,15 @@ def predict_file(input_path, output_path):
     # File is image
     if mimetypes.guess_type(input_path)[0].startswith("image"):
         image = Image.open(input_path).convert('RGB')
+        
+        basewidth = 1920
+        wpercent = (basewidth/float(image.size[0]))
+        hsize = int((float(image.size[1])*float(wpercent)))
+        image = image.resize((basewidth,hsize), Image.ANTIALIAS)
+
         predicted_image = predict_images([image])[0]
         predicted_image.save(output_path)
+        
     # File is video
     elif mimetypes.guess_type(input_path)[0].startswith("video"):
         # Create temp folder for storing frames as images
